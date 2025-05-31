@@ -1,0 +1,39 @@
+name: Ejecutar playbook Ansible
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-ansible-playbook:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar Ansible y dependencias de Conjur
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip
+          pip install ansible
+          pip install conjur
+
+      - name: Crear playbook
+        run: |
+          cat <<EOF > playbook.yml
+          ---
+          - name: Obtener secreto desde Conjur
+            hosts: localhost
+            gather_facts: false
+
+            vars:
+              my_password: "{{ lookup('conjur', 'awx/secrets/db-password') }}"
+
+            tasks:
+              - name: Mostrar secreto
+                debug:
+                  msg: "La contraseña es {{ my_password }}"
+          EOF
+
+      - name: Ejecutar playbook
+        run: ansible-playbook playbook.yml
