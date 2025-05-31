@@ -1,0 +1,12 @@
+---
+- name: Obtener secreto desde Conjur
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    my_password: "{{ lookup('conjur', 'awx/secrets/db-password') }}"
+
+  tasks:
+    - name: Mostrar secreto
+      debug:
+        msg: "La contraseña es {{ my_password }}"
