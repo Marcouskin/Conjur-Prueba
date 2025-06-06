@@ -4,7 +4,7 @@
   gather_facts: false
 
   vars:
-    my_password: "{{ lookup('conjur', 'awx/secrets/db-password') }}"
+    my_password: "{{ lookup('conjur', 'secrets/awx-cka04/api-key') }}"
 
   tasks:
     - name: Mostrar secreto
