@@ -1,4 +1,7 @@
 ---
+- name: Mostrar API Key recibida
+  debug:
+    msg: "API Key es: {{ conjur_api_key | default('NO DEFINIDA') }}"
 - name: Probar conexión a Conjur con uri
   hosts: localhost
   gather_facts: false
