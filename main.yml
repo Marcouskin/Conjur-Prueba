@@ -4,9 +4,13 @@
   gather_facts: false
 
   vars:
-    conjur_api_key: "{{ lookup('env', 'CONJUR_AUTHN_API_KEY') }}"
+    conjur_api_key: "{{ lookup('env', 'CONJUR_AUTHN_API_KEY') | default('NO DEFINIDA') }}"
 
   tasks:
+    - name: Confirmar ejecución
+      debug:
+        msg: "Iniciando prueba de entorno..."
+
     - name: Mostrar API Key inyectada
       debug:
-        msg: "API Key es: {{ conjur_api_key | default('NO DEFINIDA') }}"
+        msg: "API Key es: {{ conjur_api_key }}"
