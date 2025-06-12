@@ -1,12 +1,27 @@
 ---
-- name: Obtener secreto desde Conjur
+- name: Probar conexión a Conjur con uri
   hosts: localhost
   gather_facts: false
 
   vars:
-    my_password: "{{ lookup('conjur', 'secrets/awx-cka04/api-key') }}"
+    conjur_host: "https://192.168.100.13:8443"
+    conjur_account: "myConjurAccount"
+    conjur_login: "host/awx-cka04"
+    conjur_api_key: "{{ lookup('env', 'CONJUR_AUTHN_API_KEY') }}"  # desde credencial
 
   tasks:
-    - name: Mostrar secreto
+    - name: Autenticarse con Conjur para obtener token
+      uri:
+        url: "{{ conjur_host }}/authn/{{ conjur_account }}/{{ conjur_login | urlencode }}/authenticate"
+        method: POST
+        body: "{{ conjur_api_key }}"
+        body_format: raw
+        return_content: yes
+        validate_certs: no
+        headers:
+          Content-Type: text/plain
+      register: auth_response
+
+    - name: Mostrar token
       debug:
-        msg: "La contraseña es {{ my_password }}"
+        msg: "Token obtenido: {{ auth_response.content }}"
