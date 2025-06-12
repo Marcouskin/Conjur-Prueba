@@ -1,30 +1,12 @@
 ---
-- name: Mostrar API Key recibida
-  debug:
-    msg: "API Key es: {{ conjur_api_key | default('NO DEFINIDA') }}"
-- name: Probar conexión a Conjur con uri
+- name: Verificar API Key en entorno de ejecución
   hosts: localhost
   gather_facts: false
 
   vars:
-    conjur_host: "https://192.168.100.13:8443"
-    conjur_account: "myConjurAccount"
-    conjur_login: "host/awx-cka04"
-    conjur_api_key: "{{ lookup('env', 'CONJUR_AUTHN_API_KEY') }}"  # desde credencial
+    conjur_api_key: "{{ lookup('env', 'CONJUR_AUTHN_API_KEY') }}"
 
   tasks:
-    - name: Autenticarse con Conjur para obtener token
-      uri:
-        url: "{{ conjur_host }}/authn/{{ conjur_account }}/{{ conjur_login | urlencode }}/authenticate"
-        method: POST
-        body: "{{ conjur_api_key }}"
-        body_format: raw
-        return_content: yes
-        validate_certs: no
-        headers:
-          Content-Type: text/plain
-      register: auth_response
-
-    - name: Mostrar token
+    - name: Mostrar API Key inyectada
       debug:
-        msg: "Token obtenido: {{ auth_response.content }}"
+        msg: "API Key es: {{ conjur_api_key | default('NO DEFINIDA') }}"
