@@ -4,17 +4,20 @@
   gather_facts: false
 
   vars:
+    # Datos de configuración
     conjur_account: "myConjurAccount"
-    conjur_host_id: "secrets%2Fawx-cka04"
+    conjur_host_id: "secrets%2Fawx-cka04"  # escapado correctamente
     conjur_variable_id: "secrets/awx-cka04/api-key"
     conjur_appliance_url: "https://192.168.100.13:8443"
+
+    # API Key inyectada como variable de entorno desde AWX
     conjur_api_key: "{{ lookup('env', 'CONJUR_API_KEY') }}"
 
   tasks:
 
     - name: Autenticarse en Conjur y obtener token
       uri:
-        url: "{{ conjur_appliance_url }}/authn/{{ conjur_account }}/host/{{ conjur_host_id }}/authenticate"
+        url: "{{ conjur_appliance_url }}/authn/{{ conjur_account }}/{{ conjur_host_id }}/authenticate"
         method: POST
         body: "{{ conjur_api_key }}"
         return_content: yes
@@ -37,4 +40,3 @@
     - name: Mostrar secreto (solo para pruebas)
       debug:
         msg: "Secreto desde Conjur: {{ secret_response.content }}"
-
