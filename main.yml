@@ -9,7 +9,7 @@
 
     # Host y variable EXACTAMENTE como están registrados en conjur list
     conjur_host_id: "secrets%2Fawx-cka04"
-    conjur_variable_id: "secrets/awx-cka04/api-key"
+    conjur_variable_id: "secrets/awx-cka04/test-secret"
 
     # Esta variable se inyecta desde la credencial de AWX
     conjur_api_key: "{{ lookup('env', 'CONJUR_API_KEY') }}"
