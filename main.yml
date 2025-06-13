@@ -4,13 +4,14 @@
   gather_facts: false
 
   vars:
-    # Datos de configuración
     conjur_account: "myConjurAccount"
-    conjur_host_id: "secrets%2Fawx-cka04"  # escapado correctamente
-    conjur_variable_id: "secrets/awx-cka04/api-key"
     conjur_appliance_url: "https://192.168.100.13:8443"
 
-    # API Key inyectada como variable de entorno desde AWX
+    # Host y variable EXACTAMENTE como están registrados en conjur list
+    conjur_host_id: "secrets%2Fawx-cka04"
+    conjur_variable_id: "secrets/awx-cka04/api-key"
+
+    # Esta variable se inyecta desde la credencial de AWX
     conjur_api_key: "{{ lookup('env', 'CONJUR_API_KEY') }}"
 
   tasks:
