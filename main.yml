@@ -7,12 +7,10 @@
     conjur_account: "myConjurAccount"
     conjur_appliance_url: "https://192.168.100.13:8443"
 
-    # Host y variable EXACTAMENTE como están registrados en conjur list
-    conjur_host_id: "host%2Fawx-cka04"
-    conjur_variable_id: "valor/prueba"
+    conjur_host_id: "secrets%2Fawx-cka04"  # codificado
+    conjur_variable_id: "secrets/awx-cka04/test-secret"  # secreto de prueba
 
-    # Esta variable se inyecta desde la credencial de AWX
-    conjur_api_key: "{{ lookup('env', 'CONJUR_API_KEY') }}"
+    conjur_api_key: "{{ lookup('env', 'CONJUR_API_KEY') }}"  # desde credencial AWX
 
   tasks:
 
@@ -27,6 +25,11 @@
           Content-Type: text/plain
         validate_certs: no
       register: conjur_token
+
+    - name: Asegurarse de que se obtuvo el token
+      fail:
+        msg: "No se recibió token de autenticación desde Conjur."
+      when: conjur_token.content is not defined or conjur_token.content | length == 0
 
     - name: Obtener el secreto desde Conjur
       uri:
