@@ -1,16 +1,40 @@
 ---
-- name: Verificar API Key en entorno de ejecución
+- name: Prueba segura de acceso a secreto en Conjur
   hosts: localhost
   gather_facts: false
 
   vars:
-    conjur_api_key: "{{ lookup('env', 'CONJUR_AUTHN_API_KEY') | default('NO DEFINIDA') }}"
+    conjur_account: "myConjurAccount"
+    conjur_host_id: "secrets/awx-cka04"
+    conjur_variable_id: "secrets/awx-cka04/api-key"
+    conjur_appliance_url: "https://192.168.100.13:8443"
+    conjur_api_key: "{{ lookup('env', 'CONJUR_API_KEY') }}"
 
   tasks:
-    - name: Confirmar ejecución
-      debug:
-        msg: "Iniciando prueba de entorno..."
 
-    - name: Mostrar API Key inyectada
+    - name: Autenticarse en Conjur y obtener token
+      uri:
+        url: "{{ conjur_appliance_url }}/authn/{{ conjur_account }}/host/{{ conjur_host_id }}/authenticate"
+        method: POST
+        body: "{{ conjur_api_key }}"
+        return_content: yes
+        status_code: 200
+        headers:
+          Content-Type: text/plain
+        validate_certs: no
+      register: conjur_token
+
+    - name: Obtener el secreto desde Conjur
+      uri:
+        url: "{{ conjur_appliance_url }}/secrets/{{ conjur_account }}/variable/{{ conjur_variable_id }}"
+        method: GET
+        return_content: yes
+        headers:
+          Authorization: "Token token=\"{{ conjur_token.content }}\""
+        validate_certs: no
+      register: secret_response
+
+    - name: Mostrar secreto (solo para pruebas)
       debug:
-        msg: "API Key es: {{ conjur_api_key }}"
+        msg: "Secreto desde Conjur: {{ secret_response.content }}"
+
