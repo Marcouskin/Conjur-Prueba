@@ -8,17 +8,13 @@
     conjur_appliance_url: "https://192.168.100.13:8443"
 
     # Host y variable EXACTAMENTE como están registrados en conjur list
-    conjur_host_id: "secrets%2Fawx-cka04"
-    conjur_variable_id: "secrets/awx-cka04/api-key"
+    conjur_host_id: "host%2Fawx-cka04"
+    conjur_variable_id: "valor/prueba"
 
     # Esta variable se inyecta desde la credencial de AWX
     conjur_api_key: "{{ lookup('env', 'CONJUR_API_KEY') }}"
 
   tasks:
-
-    - name: Verificar variable de entorno CONJUR_API_KEY
-      debug:
-        var: conjur_api_key
 
     - name: Autenticarse en Conjur y obtener token
       uri:
