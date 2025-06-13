@@ -5,7 +5,7 @@
 
   vars:
     conjur_account: "myConjurAccount"
-    conjur_host_id: "secrets/awx-cka04"
+    conjur_host_id: "secrets%2Fawx-cka04"
     conjur_variable_id: "secrets/awx-cka04/api-key"
     conjur_appliance_url: "https://192.168.100.13:8443"
     conjur_api_key: "{{ lookup('env', 'CONJUR_API_KEY') }}"
