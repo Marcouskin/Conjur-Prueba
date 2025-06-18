@@ -1,9 +1,8 @@
-- name: Prueba de recuperación de secreto desde Conjur
+- name: Prueba Conjur desde colección oficial
   hosts: localhost
   gather_facts: false
-
   tasks:
-    - name: Obtener secreto desde Conjur
+    - name: Mostrar secreto desde conjur
       debug:
         msg: >-
-          {{ lookup('community.general.conjur', 'secrets/awx-cka04/api-key') }}
+          {{ lookup('cyberark.conjur.conjur_variable', 'secrets/awx-cka04/api-key') }}
