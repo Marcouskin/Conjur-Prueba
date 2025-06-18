@@ -5,4 +5,4 @@
     - name: Mostrar secreto desde Conjur
       debug:
         msg: >-
-          {{ lookup('cyberark.conjur.conjur_variable', 'secrets/awx-cka04/api-key') }}
+          {{ lookup('cyberark.conjur.conjur_variable', 'secrets/awx-cka04/api-key', cert_file='/etc/conjur/conjur.crt') }}
