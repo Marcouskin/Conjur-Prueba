@@ -1,10 +1,14 @@
 ---
-- name: Prueba Conjur desde colección oficial
+- name: Verificar contenido del certificado en EE
   hosts: localhost
   gather_facts: false
 
   tasks:
-    - name: Mostrar secreto desde Conjur
+    - name: Mostrar contenido del certificado
+      command: cat /etc/conjur/conjur.crt
+      register: cert_output
+      ignore_errors: true
+
+    - name: Mostrar resultado del cat
       debug:
-        msg: >-
-          {{ lookup('cyberark.conjur.conjur_variable', 'secrets/awx-cka04/api-key', cert_file='/etc/conjur/conjur.crt') }}
+        var: cert_output
