@@ -1,0 +1,22 @@
+- name: Verificar archivo de certificado Conjur
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Verificar existencia de conjur.crt
+      ansible.builtin.stat:
+        path: /etc/conjur/conjur.crt
+      register: cert_file
+
+    - name: Mostrar estado del certificado
+      debug:
+        var: cert_file
+
+    - name: Leer contenido del certificado (si existe)
+      ansible.builtin.command: cat /etc/conjur/conjur.crt
+      when: cert_file.stat.exists
+      register: cert_content
+
+    - name: Mostrar contenido del certificado
+      debug:
+        var: cert_content.stdout
+      when: cert_file.stat.exists
