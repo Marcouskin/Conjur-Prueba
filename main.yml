@@ -1,6 +1,8 @@
+---
 - name: Prueba Conjur desde colección oficial
   hosts: localhost
   gather_facts: false
+
   tasks:
     - name: Mostrar secreto desde Conjur
       debug:
