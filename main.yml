@@ -1,14 +1,9 @@
 ---
-- name: Verificar contenido del certificado en EE
+- name: Prueba de recuperación de secreto desde Conjur
   hosts: localhost
   gather_facts: false
-
   tasks:
-    - name: Mostrar contenido del certificado
-      command: cat /etc/conjur/conjur.crt
-      register: cert_output
-      ignore_errors: true
 
-    - name: Mostrar resultado del cat
-      debug:
-        var: cert_output
+    - name: Obtener secreto desde Conjur
+      ansible.builtin.debug:
+        msg: "{{ lookup('cyberark.conjur.conjur_variable', 'secrets/awx-cka04/api-key') }}"
