@@ -1,9 +1,10 @@
 ---
-- name: Prueba de recuperación de secreto desde Conjur
+- name: Test lookup from Conjur
   hosts: localhost
-  gather_facts: false
-  tasks:
+  connection: local
+  gather_facts: no
 
-    - name: Obtener secreto desde Conjur
-      ansible.builtin.debug:
-        msg: "{{ lookup('cyberark.conjur.conjur_variable', 'secrets/awx-cka04/api-key') }}"
+  tasks:
+    - name: Mostrar secreto desde Conjur
+      debug:
+        msg: "{{ lookup('cyberark.conjur', 'secrets/awx-cka04/api-key') }}"
