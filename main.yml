@@ -1,10 +1,7 @@
----
-- name: Test lookup from Conjur
+- name: Mostrar secreto desde Conjur
   hosts: localhost
-  connection: local
   gather_facts: no
-
   tasks:
     - name: Mostrar secreto desde Conjur
       debug:
-        msg: "{{ lookup('cyberark.conjur', 'secrets/awx-cka04/api-key') }}"
+        msg: "{{ lookup('cyberark.conjur.conjur_variable', 'secrets/awx-cka04/api-key') }}"
